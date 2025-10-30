@@ -1,0 +1,150 @@
+########################################
+###  UNITY + C# + VS CODE + SOLANA  ###
+########################################
+
+# === Unity Generated Files ===
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+MemoryCaptures/
+Recordings/
+
+# === VS / VS Code ===
+.vscode/
+.vs/
+.idea/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+
+# === Unity Cache & Crash Dumps ===
+sysinfo.txt
+*.stacktrace
+*.crash
+*.dmp
+
+# === Unity Generated Meta ===
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+# === Build Artifacts ===
+*.apk
+*.aab
+*.unitypackage
+*.app
+*.exe
+*.xcodeproj/
+*.xcworkspace/
+*.xcuserstate
+*.ipa
+*.msix
+*.zip
+
+# === OS Specific ===
+# macOS
+.DS_Store
+._*
+.AppleDouble
+.Spotlight-V100
+.Trashes
+Icon?
+# Windows
+Thumbs.db
+Desktop.ini
+# Linux
+*~
+
+# === Auto-Generated Configs ===
+ProjectSettings/EditorBuildSettings.asset
+ProjectSettings/GraphicsSettings.asset
+ProjectSettings/QualitySettings.asset
+
+# === Logs and Crash Dumps ===
+*.log
+*.tlog
+*.csv
+*.bak
+*.old
+*.orig
+
+# === Rider, JetBrains, Visual Studio Cache ===
+.idea/
+*.DotSettings.user
+*.DotSettings
+
+# === Unity Cloud Build ===
+/UnityCloud/
+
+########################################
+###  SOLANA / WEB3 SECURITY FILES   ###
+########################################
+
+# Environment variables and keys
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+.env.test
+*.secret
+*.secrets
+*.key
+*.pem
+*.json.key
+*.wallet
+*.wallet.json
+*.p12
+*.keystore
+*.der
+*.cert
+
+# Any local wallet or keypair file (Solana)
+*.keypair.json
+keypair.json
+wallet.json
+
+# Node.js / TypeScript artifacts (if you use web3 scripts)
+node_modules/
+package-lock.json
+yarn.lock
+dist/
+build/
+.npmrc
+npm-debug.log*
+
+# Temporary test or debug scripts
+test.js
+test.ts
+debug.js
+debug.ts
+scratch/
+temp/
+
+# Any exported web build that shouldn't be in repo
+WebGLBuild/
+Builds/WebGL/
+web-build/
+dist-web/
+
+########################################
+###  KEEP THESE TRACKED IN GIT       ###
+########################################
+
+# Safe folders to commit
+!Assets/
+!Packages/
+!ProjectSettings/
+!.gitignore
+!README.md
