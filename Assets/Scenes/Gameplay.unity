@@ -157,7 +157,7 @@ Transform:
   m_GameObject: {fileID: 17044611}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.02615, y: -0.20726, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -199,7 +199,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 20, y: -75}
+  m_AnchoredPosition: {x: 20, y: -230}
   m_SizeDelta: {x: 80, y: 400}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &131393924
@@ -456,7 +456,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 422258179}
-  - component: {fileID: 422258182}
+  - component: {fileID: 422258186}
+  - component: {fileID: 422258185}
+  - component: {fileID: 422258184}
+  - component: {fileID: 422258183}
   - component: {fileID: 422258181}
   - component: {fileID: 422258180}
   m_Layer: 5
@@ -483,7 +486,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 200}
+  m_AnchoredPosition: {x: 0, y: 45}
   m_SizeDelta: {x: 400, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &422258180
@@ -506,8 +509,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 0}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -524,7 +527,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 422258178}
   m_CullTransparentMesh: 1
---- !u!114 &422258182
+--- !u!114 &422258183
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -533,21 +536,73 @@ MonoBehaviour:
   m_GameObject: {fileID: 422258178}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1245494049e29d4fbacfa9826ec1d93, type: 3}
+  m_Script: {fileID: 11500000, guid: a829b2e165e72504896765ed6c9b2822, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ChronoDash.UI.PowerupNotification
+  m_EditorClassIdentifier: Assembly-CSharp::ChronoDash.UI.NotificationUI
   notificationPrefab: {fileID: 0}
   notificationContainer: {fileID: 1249206655}
+  backgroundSprite: {fileID: 21300000, guid: 70e0bba3d7f8c8e4c9a5a9e5702c8a8e, type: 3}
+  font: {fileID: 11400000, guid: aee87f15848ada24a97f57354d72000f, type: 2}
+  fontSize: 20
+  backgroundColor: {r: 0.14465404, g: 0.12600367, b: 0.12600367, a: 0.9}
+  borderColor: {r: 0.26415092, g: 0.2616589, b: 0.2616589, a: 1}
+  borderWidth: 2
+  size: {x: 400, y: 100}
   displayDuration: 2
   fadeInTime: 0.3
   fadeOutTime: 0.5
   slideDistance: 50
-  invincibilityColor: {r: 1, g: 0.78431374, b: 0, a: 1}
-  speedColor: {r: 1, g: 0.72156864, b: 0.07058824, a: 1}
-  magnetColor: {r: 0.6745098, g: 0.19607843, b: 0.19607843, a: 1}
-  shieldColor: {r: 0.18431373, g: 0.77254903, b: 0.827451, a: 1}
-  multiply2xColor: {r: 0.9647059, g: 0.6901961, b: 0.23921569, a: 1}
-  healthColor: {r: 1, g: 0, b: 0, a: 1}
+--- !u!114 &422258184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 422258178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66de5f8484f112f40a553858b3205881, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChronoDash.UI.Notifications.EffectNotifications
+  notificationUI: {fileID: 422258183}
+  gravityFlipColor: {r: 1, g: 1, b: 1, a: 1}
+  screenShakeColor: {r: 1, g: 1, b: 1, a: 1}
+  darknessColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &422258185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 422258178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f17aab259fa576448083f4f94b9692f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChronoDash.UI.Notifications.GemstoneNotifications
+  notificationUI: {fileID: 422258183}
+  blueGemColor: {r: 1, g: 1, b: 1, a: 1}
+  greenGemColor: {r: 1, g: 1, b: 1, a: 1}
+  redGemColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &422258186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 422258178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32b341aa835878448ac94fc38673aa55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChronoDash.UI.Notifications.PowerupNotifications
+  notificationUI: {fileID: 422258183}
+  invincibilityColor: {r: 1, g: 1, b: 1, a: 1}
+  speedColor: {r: 1, g: 1, b: 1, a: 1}
+  magnetColor: {r: 1, g: 1, b: 1, a: 1}
+  shieldColor: {r: 1, g: 1, b: 1, a: 1}
+  multiply2xColor: {r: 1, g: 1, b: 1, a: 1}
+  healthColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -801,11 +856,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1690130233}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -30}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 30, y: -120}
   m_SizeDelta: {x: 200, y: 25}
-  m_Pivot: {x: 0.5, y: 1}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &688456320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -860,7 +915,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -1017,7 +1072,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 20, y: -20}
+  m_AnchoredPosition: {x: 20, y: -175}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &756546158
@@ -1338,19 +1393,6 @@ MonoBehaviour:
   - {fileID: 1332797206}
   worldRotationInterval: 20
   autoRotateWorlds: 1
-  difficultyScalingDelay: 0
-  iceTornadoPrefab: {fileID: 1017549272949567232, guid: e8f68d55392374447b9386b9fe5d7407, type: 3}
-  fireBlastPrefab: {fileID: 265450571077873605, guid: acde33d204ad47048ae0b8eadbf59304, type: 3}
-  sandstormEffect: {fileID: 0}
-  gravityFlipEffect: {fileID: 3271848942515625136, guid: c829a8becb5986248a9ef4f2e50a26c6, type: 3}
-  jungleFlipMinInterval: 20
-  jungleFlipMaxInterval: 50
-  iceMinInterval: 20
-  iceMaxInterval: 50
-  lavaMinInterval: 20
-  lavaMaxInterval: 50
-  playerTransform: {fileID: 1165860014}
-  obstaclesManager: {fileID: 1607434134}
 --- !u!4 &863936150
 Transform:
   m_ObjectHideFlags: 0
@@ -1360,7 +1402,58 @@ Transform:
   m_GameObject: {fileID: 863936148}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.09227, y: 0.32452, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &891742966
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 891742968}
+  - component: {fileID: 891742967}
+  m_Layer: 0
+  m_Name: GravityFlipEffect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &891742967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 891742966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 983468a68348f7243bd06952e9db5854, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChronoDash.Effects.GravityFlipEffect
+  effectDuration: 10
+  rotationSpeed: 2
+  mainCamera: {fileID: 519420031}
+  warningSound: {fileID: 0}
+  flipSound: {fileID: 0}
+  flipUI: 1
+  gameplayCanvas: {fileID: 1690130232}
+--- !u!4 &891742968
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 891742966}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1502,6 +1595,61 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 916015873}
   m_CullTransparentMesh: 1
+--- !u!1 &953422091
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 953422093}
+  - component: {fileID: 953422092}
+  m_Layer: 0
+  m_Name: GameplayEffectsManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &953422092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 953422091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abbce85462d77e44881c46850ac2a088, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChronoDash.Managers.GameplayEffectsManager
+  dualEffectScoreThreshold: 1000
+  tripleEffectScoreThreshold: 2500
+  earlyWarningThreshold: 250
+  minEffectInterval: 5
+  maxEffectInterval: 10
+  earlyWarningTime: 5
+  normalWarningTime: 2
+  gravityFlipEffect: {fileID: 891742967}
+  screenShakeEffect: {fileID: 1852926150}
+  darknessEffect: {fileID: 1575051023}
+  difficultyManager: {fileID: 2095712275}
+--- !u!4 &953422093
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 953422091}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &971066134
 GameObject:
   m_ObjectHideFlags: 0
@@ -2206,7 +2354,6 @@ MonoBehaviour:
   greenGemstonePrefab: {fileID: 8529840454681828846, guid: 687c1eb050a4fb54daba7ca4aa2fcdbe, type: 3}
   spawnPoint: {fileID: 2140522689}
   spawnInterval: 7
-  baseGroundY: -3.7
   spawnAtRiskyPositions: 1
   riskySpawnChance: 0.7
   blueChance: 0.5
@@ -2431,7 +2578,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -155}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1503749058
@@ -2501,12 +2648,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9dd83ce8d8a21274e849bac930dac119, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChronoDash.Powerups.PowerupManager
-  invincibilityPrefab: {fileID: 9209642410026822420, guid: 36406ad7a8c73c2408d64813c1657c2a, type: 3}
-  speedPrefab: {fileID: 0}
-  magnetPrefab: {fileID: 0}
-  shieldPrefab: {fileID: 0}
-  multiply2xPrefab: {fileID: 0}
-  healthPrefab: {fileID: 0}
+  invincibilityPrefab: {fileID: 1766751675967937244, guid: 2c9802b286c346248bf06b9099e86486, type: 3}
+  speedPrefab: {fileID: 4017042439077372283, guid: ecd7f1a04d58c4846849680ca062ef79, type: 3}
+  magnetPrefab: {fileID: 5735011759477603221, guid: 2462a556523a755459a9c30783011b86, type: 3}
+  shieldPrefab: {fileID: 6071348511506395551, guid: d1163d54574a204469c50f59e0daa674, type: 3}
+  multiply2xPrefab: {fileID: 4141900347612573920, guid: 786eae16f70c2134eb97a622a6c32ee4, type: 3}
+  healthPrefab: {fileID: 4469631422139602154, guid: 5d9611ced80717d46ac255963d08080c, type: 3}
   minSpawnInterval: 15
   maxSpawnInterval: 20
   spawnX: 12
@@ -2520,7 +2667,7 @@ Transform:
   m_GameObject: {fileID: 1516129662}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.81355, y: 2.28655, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2589,6 +2736,55 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!1 &1575051022
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1575051024}
+  - component: {fileID: 1575051023}
+  m_Layer: 0
+  m_Name: DarknessEffect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1575051023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1575051022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec675c23db70ab04aae483df1ec0c55d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChronoDash.Effects.DarknessEffect
+  effectDuration: 10
+  spotlightRadius: 300
+  fadeInDuration: 1.5
+  fadeOutDuration: 1.5
+  edgeSoftness: 50
+--- !u!4 &1575051024
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1575051022}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1607434133
 GameObject:
   m_ObjectHideFlags: 0
@@ -2827,6 +3023,7 @@ MonoBehaviour:
   comboManager: {fileID: 1938228602}
   timeBubble: {fileID: 1165860015}
   worldManager: {fileID: 863936149}
+  gameplayEffectsManager: {fileID: 953422092}
   player: {fileID: 1165860013}
   obstaclesManager: {fileID: 1607434134}
   gemstoneManager: {fileID: 1401540999}
@@ -2984,6 +3181,78 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1795988180}
   m_CullTransparentMesh: 1
+--- !u!1 &1852926149
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1852926151}
+  - component: {fileID: 1852926150}
+  m_Layer: 0
+  m_Name: ScreenShakeEffect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1852926150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1852926149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ea0c4325ecd60f48a4e2eff248d0d4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChronoDash.Effects.ScreenShakeEffect
+  effectDuration: 5
+  shakeIntensity: 0.3
+  shakeFrequency: 25
+  decayCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  mainCamera: {fileID: 519420031}
+--- !u!4 &1852926151
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1852926149}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1938228601
 GameObject:
   m_ObjectHideFlags: 0
@@ -3028,60 +3297,6 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1938228601}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.81355, y: 2.28655, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1995428074
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1995428076}
-  - component: {fileID: 1995428075}
-  m_Layer: 0
-  m_Name: PowerupManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1995428075
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1995428074}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9dd83ce8d8a21274e849bac930dac119, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ChronoDash.Powerups.PowerupManager
-  invincibilityPrefab: {fileID: 1766751675967937244, guid: 2c9802b286c346248bf06b9099e86486, type: 3}
-  speedPrefab: {fileID: 4017042439077372283, guid: ecd7f1a04d58c4846849680ca062ef79, type: 3}
-  magnetPrefab: {fileID: 5735011759477603221, guid: 2462a556523a755459a9c30783011b86, type: 3}
-  shieldPrefab: {fileID: 6071348511506395551, guid: d1163d54574a204469c50f59e0daa674, type: 3}
-  multiply2xPrefab: {fileID: 4141900347612573920, guid: 786eae16f70c2134eb97a622a6c32ee4, type: 3}
-  healthPrefab: {fileID: 4469631422139602154, guid: 5d9611ced80717d46ac255963d08080c, type: 3}
-  minSpawnInterval: 15
-  maxSpawnInterval: 20
-  spawnX: 12
-  baseGroundY: -3.7
---- !u!4 &1995428076
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1995428074}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -3160,7 +3375,7 @@ Transform:
   m_GameObject: {fileID: 2046357222}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.02615, y: -0.20726, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3240,7 +3455,7 @@ Transform:
   m_GameObject: {fileID: 2095712274}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.09227, y: 0.32452, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3297,4 +3512,7 @@ SceneRoots:
   - {fileID: 851958460}
   - {fileID: 2046357224}
   - {fileID: 17044613}
-  - {fileID: 1995428076}
+  - {fileID: 891742968}
+  - {fileID: 953422093}
+  - {fileID: 1852926151}
+  - {fileID: 1575051024}
