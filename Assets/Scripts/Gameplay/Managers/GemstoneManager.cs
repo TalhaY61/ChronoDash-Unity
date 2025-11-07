@@ -18,10 +18,10 @@ namespace ChronoDash.Gemstones
         [SerializeField] private bool spawnAtRiskyPositions = true;
         [SerializeField] [Range(0f, 1f)] private float riskySpawnChance = 0.7f; // 70% risky, 30% safe
         
-        [Header("Rarity System (Must total 1.0)")]
-        [SerializeField] [Tooltip("Chance for Blue gemstones (Common)")] private float blueChance = 0.34f;
+        [Header("Rarity System")]
         [SerializeField] [Tooltip("Chance for Green gemstones (Uncommon)")] private float greenChance = 0.33f;
         [SerializeField] [Tooltip("Chance for Red gemstones (Rare)")] private float redChance = 0.33f;
+        // Blue gemstones are the remaining chance (1.0 - redChance - greenChance)
 
         private float spawnTimer = 0f;
         private List<GameObject> activeGemstones = new List<GameObject>();

@@ -15,46 +15,15 @@ namespace ChronoDash.Managers
         [SerializeField] private AudioClip gemstoneSound;
         [SerializeField] private AudioClip timeControlSound;
         [SerializeField] private AudioClip selectSound;
-        [SerializeField] private float sfxVolume = 0.3f;
+        [SerializeField] private float sfxVolume = 0.5f;
 
         private AudioSource musicSource;
         private AudioSource sfxSource;
         
-        // Settings
-        private bool musicEnabled = true;
-        private bool vfxEnabled = true;
-        
         // Events
-        public System.Action<bool> OnMusicEnabledChanged;
-        public System.Action<bool> OnVFXEnabledChanged;
         public System.Action<float> OnMusicVolumeChanged;
         
         // Properties
-        public bool MusicEnabled
-        {
-            get => musicEnabled;
-            set
-            {
-                musicEnabled = value;
-                PlayerPrefs.SetInt("MusicEnabled", value ? 1 : 0);
-                PlayerPrefs.Save();
-                OnMusicEnabledChanged?.Invoke(value);
-                ApplyMusicSettings();
-            }
-        }
-        
-        public bool VFXEnabled
-        {
-            get => vfxEnabled;
-            set
-            {
-                vfxEnabled = value;
-                PlayerPrefs.SetInt("VFXEnabled", value ? 1 : 0);
-                PlayerPrefs.Save();
-                OnVFXEnabledChanged?.Invoke(value);
-            }
-        }
-        
         public float MusicVolume
         {
             get => musicVolume;
@@ -72,7 +41,6 @@ namespace ChronoDash.Managers
 
         private void Awake()
         {
-            // Singleton pattern
             if (Instance == null)
             {
                 Instance = this;
@@ -87,13 +55,11 @@ namespace ChronoDash.Managers
 
         private void InitializeAudioSources()
         {
-            // Create music source
             musicSource = gameObject.AddComponent<AudioSource>();
             musicSource.loop = true;
             musicSource.volume = musicVolume;
             musicSource.playOnAwake = false;
 
-            // Create SFX source
             sfxSource = gameObject.AddComponent<AudioSource>();
             sfxSource.loop = false;
             sfxSource.volume = sfxVolume;
@@ -108,19 +74,22 @@ namespace ChronoDash.Managers
         
         private void LoadSettings()
         {
-            musicEnabled = PlayerPrefs.GetInt("MusicEnabled", 1) == 1;
-            vfxEnabled = PlayerPrefs.GetInt("VFXEnabled", 1) == 1;
             musicVolume = PlayerPrefs.GetFloat("MusicVolume", 0.5f);
+            sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 0.5f);
             ApplyMusicSettings();
+            ApplySFXSettings();
         }
         
         private void ApplyMusicSettings()
         {
             if (musicSource != null)
-            {
-                musicSource.mute = !musicEnabled;
                 musicSource.volume = musicVolume;
-            }
+        }
+        
+        private void ApplySFXSettings()
+        {
+            if (sfxSource != null)
+                sfxSource.volume = sfxVolume;
         }
 
         public void PlayMusic()
@@ -135,98 +104,38 @@ namespace ChronoDash.Managers
         public void StopMusic()
         {
             if (musicSource != null)
-            {
                 musicSource.Stop();
-            }
         }
 
         public void PauseMusic()
         {
             if (musicSource != null && musicSource.isPlaying)
-            {
                 musicSource.Pause();
-            }
         }
         
         public void UnpauseMusic()
         {
             if (musicSource != null && !musicSource.isPlaying)
-            {
                 musicSource.UnPause();
-            }
         }
 
         public void PlaySFX(AudioClip clip)
         {
-            // Only play if VFX is enabled
-            if (clip != null && sfxSource != null && vfxEnabled)
-            {
+            if (clip != null && sfxSource != null)
                 sfxSource.PlayOneShot(clip);
-            }
         }
 
-        public void PlayJumpSound()
-        {
-            PlaySFX(jumpSound);
-        }
-
-        public void PlayHitSound()
-        {
-            PlaySFX(hitSound);
-        }
-
-        public void PlayDeathSound()
-        {
-            PlaySFX(deathSound);
-        }
-
-        public void PlayGemstoneSound()
-        {
-            PlaySFX(gemstoneSound);
-        }
-
-        public void PlayTimeControlSound()
-        {
-            PlaySFX(timeControlSound);
-        }
-
-        public void PlaySelectSound()
-        {
-            PlaySFX(selectSound);
-        }
-
-        public void SetMusicVolume(float volume)
-        {
-            musicVolume = Mathf.Clamp01(volume);
-            if (musicSource != null)
-            {
-                musicSource.volume = musicVolume;
-            }
-        }
+        public void PlayJumpSound() => PlaySFX(jumpSound);
+        public void PlayHitSound() => PlaySFX(hitSound);
+        public void PlayDeathSound() => PlaySFX(deathSound);
+        public void PlayGemstoneSound() => PlaySFX(gemstoneSound);
+        public void PlayTimeControlSound() => PlaySFX(timeControlSound);
+        public void PlaySelectSound() => PlaySFX(selectSound);
 
         public void SetSFXVolume(float volume)
         {
             sfxVolume = Mathf.Clamp01(volume);
-            if (sfxSource != null)
-            {
-                sfxSource.volume = sfxVolume;
-            }
-        }
-        
-        /// <summary>
-        /// Toggle music on/off.
-        /// </summary>
-        public void ToggleMusic()
-        {
-            MusicEnabled = !MusicEnabled;
-        }
-        
-        /// <summary>
-        /// Toggle VFX on/off.
-        /// </summary>
-        public void ToggleVFX()
-        {
-            VFXEnabled = !VFXEnabled;
+            ApplySFXSettings();
         }
     }
 }

@@ -173,5 +173,12 @@ namespace ChronoDash.Managers {
             }
             return "Unknown";
         }
+        
+        /// <summary>
+        /// Get current background index for syncing with WorldManager
+        /// </summary>
+        public int GetCurrentBackgroundIndex() {
+            return currentBackgroundIndex;
+        }
     }
 }

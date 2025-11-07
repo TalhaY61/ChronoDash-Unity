@@ -2,16 +2,10 @@ using UnityEngine;
 using System.Collections;
 
 namespace ChronoDash.Effects {
-    /// <summary>
-    /// Screen Shake Effect - Shakes camera for visual intensity.
-    /// Uses random directional shake with gradual decay.
-    /// Duration: 5 seconds (configurable, scales with difficulty).
-    /// </summary>
     public class ScreenShakeEffect : MonoBehaviour {
         [Header("Effect Settings")]
         [SerializeField] private float effectDuration = 5f;
         [SerializeField] private float shakeIntensity = 0.3f;
-        [SerializeField] private float shakeFrequency = 25f; // How fast camera shakes
         [SerializeField] private AnimationCurve decayCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0f);
         
         [Header("References")]
@@ -31,19 +25,12 @@ namespace ChronoDash.Effects {
         }
     
         public IEnumerator TriggerEffect(float warningTime) {
-            if (isActive) {
-                Debug.LogWarning("⚠️ ScreenShakeEffect: Effect already active!");
-                yield break;
-            }
-            
-            if (mainCamera == null) {
-                yield break;
-            }
+            if (isActive) yield break;
+
+            if (mainCamera == null) yield break;
             
             isActive = true;
-            
-            Debug.Log($"📳 ScreenShakeEffect: Starting screen shake (duration: {effectDuration}s, intensity: {shakeIntensity})");
-            
+                        
             // Store original camera position and rotation
             originalCameraPosition = mainCamera.transform.localPosition;
             originalCameraRotation = mainCamera.transform.localRotation;
