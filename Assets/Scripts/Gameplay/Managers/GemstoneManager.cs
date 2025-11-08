@@ -73,6 +73,33 @@ namespace ChronoDash.Gemstones
         }
         
         /// <summary>
+        /// Spawn a specific gemstone type (used by ArenaManager for viewer interactions).
+        /// </summary>
+        public void SpawnSpecificGemstone(GemstoneType type)
+        {
+            GameObject prefab = GetGemstonePrefab(type);
+
+            if (prefab == null)
+            {
+                Debug.LogWarning($"No prefab found for gemstone type: {type}");
+                return;
+            }
+
+            Vector3 spawnPosition = CalculateRiskySpawnPosition();
+
+            GameObject gemstone = Instantiate(prefab, spawnPosition, Quaternion.identity, null);
+            
+            Gemstone gemstoneComponent = gemstone.GetComponent<Gemstone>();
+            if (gemstoneComponent != null)
+            {
+                gemstoneComponent.SetType(type);
+            }
+
+            activeGemstones.Add(gemstone);
+            Debug.Log($"Spawned gemstone: {type} at {spawnPosition}");
+        }
+        
+        /// <summary>
         /// Calculate spawn positions that require player skill:
         /// - High up (requires jump/double jump)
         /// - Low (requires duck)

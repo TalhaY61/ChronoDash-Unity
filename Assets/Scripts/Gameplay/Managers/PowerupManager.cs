@@ -76,6 +76,24 @@ namespace ChronoDash.Powerups
             GameObject powerup = Instantiate(prefab, spawnPos, Quaternion.identity);
         }
         
+        /// <summary>
+        /// Spawn a specific powerup type (used by ArenaManager for viewer interactions).
+        /// </summary>
+        public void SpawnSpecificPowerup(PowerupType type)
+        {
+            GameObject prefab = GetPrefabForType(type);
+            
+            if (prefab == null)
+            {
+                Debug.LogWarning($"No prefab found for powerup type: {type}");
+                return;
+            }
+            
+            Vector3 spawnPos = CalculateSpawnPosition(type);
+            GameObject powerup = Instantiate(prefab, spawnPos, Quaternion.identity);
+            Debug.Log($"Spawned powerup: {type} at {spawnPos}");
+        }
+        
         private PowerupType SelectRandomPowerupType()
         {
             float roll = Random.value;

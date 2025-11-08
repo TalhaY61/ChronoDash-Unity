@@ -16,14 +16,6 @@ namespace ChronoDash.Abilities
         [SerializeField] private float duration = 3f;
         [SerializeField] private float cooldown = 10f;
         
-        [Header("Visual Prefab")]
-        [SerializeField] private GameObject timeBubblePrefab;
-        [SerializeField] private float bubbleScale = 7f;
-        
-        [Header("Rendering")]
-    [SerializeField] private int bubbleSortingOrder = 11; // Background is 10, so bubble is above
-        [Tooltip("Set sorting order: Background=-10, Bubble=-5 to 10, Player=0, Obstacles=5")]
-        
         [Header("Audio")]
         [SerializeField] private AudioClip activationSound;
         [SerializeField] private AudioClip deactivationSound;
@@ -35,8 +27,6 @@ namespace ChronoDash.Abilities
         private float cooldownTimer = 0f;
         
         // Components
-        private GameObject bubbleInstance;
-        private Animator bubbleAnimator;
         private AudioSource audioSource;
         
         // Events
@@ -46,8 +36,11 @@ namespace ChronoDash.Abilities
         // Properties
         public bool IsActive => isActive;
         public bool IsOnCooldown => isOnCooldown;
+        public float ActiveTimeRemaining => activeTimer;
+        public float Duration => duration;
         public float CooldownRemaining => cooldownTimer;
         public float CooldownProgress => 1f - (cooldownTimer / cooldown);
+        public float Cooldown => cooldown;
         public float BubbleRadius => bubbleRadius;
         
         private void Awake()
@@ -83,33 +76,6 @@ namespace ChronoDash.Abilities
             isActive = true;
             activeTimer = duration;
             
-            if (timeBubblePrefab != null)
-            {
-                // Spawn bubble visual
-                bubbleInstance = Instantiate(timeBubblePrefab, transform.position, Quaternion.identity);
-                bubbleInstance.name = "ActiveTimeBubble";
-                bubbleInstance.transform.SetParent(transform, worldPositionStays: true);
-                bubbleInstance.transform.localPosition = Vector3.zero;
-                // Reset Z position to 0 for manual adjustment
-                var pos = bubbleInstance.transform.localPosition;
-                pos.z = 0f;
-                bubbleInstance.transform.localPosition = pos;
-                bubbleInstance.transform.localScale = Vector3.one * bubbleScale;
-                
-                // Get animator if exists
-                bubbleAnimator = bubbleInstance.GetComponent<Animator>();
-                if (bubbleAnimator != null)
-                {
-                    // Animation should start on first frame (bubble) and stay there
-                    // It will play fade frames when we trigger Close
-                    bubbleAnimator.speed = 0f; // Pause on first frame
-                }
-                
-                // Set sorting order - adjustable in Inspector
-                SpriteRenderer sr = bubbleInstance.GetComponent<SpriteRenderer>();
-                if (sr != null) sr.sortingOrder = bubbleSortingOrder;
-            }
-            
             if (activationSound != null && audioSource != null)
             {
                 audioSource.PlayOneShot(activationSound);
@@ -123,27 +89,6 @@ namespace ChronoDash.Abilities
             isActive = false;
             isOnCooldown = true;
             cooldownTimer = cooldown;
-            
-            // Play closing animation before destroying
-            if (bubbleInstance != null)
-            {
-                if (bubbleAnimator != null)
-                {
-                    // Resume animation to play fade frames
-                    bubbleAnimator.speed = 1f;
-                    
-                    // Destroy after fade animation completes (estimate 0.5s)
-                    Destroy(bubbleInstance, 0.5f);
-                }
-                else
-                {
-                    // No animator - destroy immediately
-                    Destroy(bubbleInstance);
-                }
-                
-                bubbleInstance = null;
-                bubbleAnimator = null;
-            }
             
             if (deactivationSound != null && audioSource != null)
             {
@@ -198,20 +143,6 @@ namespace ChronoDash.Abilities
             
             isOnCooldown = false;
             cooldownTimer = 0f;
-            
-            if (bubbleInstance != null)
-            {
-                Destroy(bubbleInstance);
-                bubbleInstance = null;
-            }
-        }
-        
-        private void OnDestroy()
-        {
-            if (bubbleInstance != null)
-            {
-                Destroy(bubbleInstance);
-            }
         }
     }
 }

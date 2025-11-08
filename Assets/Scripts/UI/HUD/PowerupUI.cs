@@ -29,7 +29,8 @@ namespace ChronoDash.UI
         {
             public GameObject slotObject;
             public Image iconImage;
-            public Image timerFillImage; // Radial timer
+            public Image timerFillImage; // Radial timer overlay
+            public TextMeshProUGUI timerText; // Countdown text
             public TextMeshProUGUI stackText;
             public PowerupType type;
             public float duration;
@@ -116,18 +117,18 @@ namespace ChronoDash.UI
                 {
                     PowerupSlot slot = activeSlots[type];
                     
-                    // Fade icon alpha as time runs out (instead of overlay)
-                    if (slot.iconImage != null)
+                    // Update radial timer fill
+                    if (slot.timerFillImage != null)
                     {
                         float timeRatio = effect.remainingTime / effect.duration;
-                        // Fade from full opacity (1.0) to 50% opacity (0.5) as timer runs out
-                        float alpha = Mathf.Lerp(0.5f, 1f, timeRatio);
-                        Color iconColor = slot.iconImage.color;
-                        iconColor.a = alpha;
-                        slot.iconImage.color = iconColor;
+                        slot.timerFillImage.fillAmount = timeRatio; // Drains from 1 to 0
                     }
                     
-                    // Note: timerFillImage removed - using icon alpha instead
+                    // Update countdown timer text
+                    if (slot.timerText != null)
+                    {
+                        slot.timerText.text = Mathf.Ceil(effect.remainingTime).ToString("F0") + "s";
+                    }
                     
                     // Update stack count text
                     if (slot.stackText != null)
@@ -201,6 +202,8 @@ namespace ChronoDash.UI
             
             // Get components
             Image iconImg = slotObj.transform.Find("Icon")?.GetComponent<Image>();
+            Image timerFill = slotObj.transform.Find("TimerFill")?.GetComponent<Image>();
+            TextMeshProUGUI timerTxt = slotObj.transform.Find("TimerText")?.GetComponent<TextMeshProUGUI>();
             TextMeshProUGUI stackTxt = slotObj.transform.Find("StackText")?.GetComponent<TextMeshProUGUI>();
             
             // If using manual creation, components are already set
@@ -210,10 +213,14 @@ namespace ChronoDash.UI
             if (iconImg != null)
             {
                 iconImg.sprite = GetPowerupIcon(type);
-                iconImg.color = Color.white; // Full opacity initially
+                iconImg.color = Color.white; // Full opacity
             }
             
-            // Note: Timer overlay removed - using icon alpha fading instead
+            // Configure timer text
+            if (timerTxt != null)
+            {
+                timerTxt.text = Mathf.Ceil(duration).ToString("F0") + "s";
+            }
             
             // Configure stack text
             if (stackTxt != null && stackCount > 1)
@@ -231,7 +238,8 @@ namespace ChronoDash.UI
             {
                 slotObject = slotObj,
                 iconImage = iconImg,
-                timerFillImage = null, // No longer using timer overlay
+                timerFillImage = timerFill,
+                timerText = timerTxt,
                 stackText = stackTxt,
                 type = type,
                 duration = duration
@@ -264,19 +272,58 @@ namespace ChronoDash.UI
             iconRect.sizeDelta = Vector2.zero;
             iconRect.anchoredPosition = Vector2.zero;
             
-            // NOTE: Timer overlay removed - icons are fully transparent now
-            // Timer functionality moved to alpha blending on the icon itself
+            // Create radial timer fill overlay
+            GameObject timerObj = new GameObject("TimerFill");
+            timerObj.transform.SetParent(slotObj.transform, false);
             
-            // Create stack count text
+            Image timerFillImg = timerObj.AddComponent<Image>();
+            timerFillImg.sprite = GetPowerupIcon(type); // Use same sprite for fill effect
+            timerFillImg.type = Image.Type.Filled;
+            timerFillImg.fillMethod = Image.FillMethod.Radial360;
+            timerFillImg.fillOrigin = (int)Image.Origin360.Top;
+            timerFillImg.fillClockwise = false;
+            timerFillImg.fillAmount = 1f;
+            timerFillImg.color = new Color(0f, 0f, 0f, 0.5f); // Dark overlay
+            
+            RectTransform timerRect = timerObj.GetComponent<RectTransform>();
+            timerRect.anchorMin = Vector2.zero;
+            timerRect.anchorMax = Vector2.one;
+            timerRect.sizeDelta = Vector2.zero;
+            timerRect.anchoredPosition = Vector2.zero;
+            
+            // Create countdown timer text (center)
+            GameObject timerTextObj = new GameObject("TimerText");
+            timerTextObj.transform.SetParent(slotObj.transform, false);
+            
+            TextMeshProUGUI timerTxt = timerTextObj.AddComponent<TextMeshProUGUI>();
+            timerTxt.fontSize = 18;
+            timerTxt.color = Color.white;
+            timerTxt.alignment = TextAlignmentOptions.Center;
+            timerTxt.fontStyle = FontStyles.Bold;
+            timerTxt.enableAutoSizing = false;
+            
+            RectTransform timerTextRect = timerTextObj.GetComponent<RectTransform>();
+            timerTextRect.anchorMin = Vector2.zero;
+            timerTextRect.anchorMax = Vector2.one;
+            timerTextRect.sizeDelta = Vector2.zero;
+            timerTextRect.anchoredPosition = Vector2.zero;
+            
+            // Create stack count text (bottom-right corner, bigger size)
             GameObject stackTextObj = new GameObject("StackText");
-            stackTextObj.transform.SetParent(slotObj.transform);
+            stackTextObj.transform.SetParent(slotObj.transform, false);
             
             TextMeshProUGUI stackTxt = stackTextObj.AddComponent<TextMeshProUGUI>();
             stackTxt.text = "x1";
-            stackTxt.fontSize = 16;
+            stackTxt.fontSize = 20; // Increased from 16 to 20
             stackTxt.color = Color.white;
             stackTxt.alignment = TextAlignmentOptions.BottomRight;
             stackTxt.fontStyle = FontStyles.Bold;
+            stackTxt.enableAutoSizing = false;
+            
+            // Add outline for better visibility
+            var outline = stackTextObj.AddComponent<UnityEngine.UI.Outline>();
+            outline.effectColor = Color.black;
+            outline.effectDistance = new Vector2(1, -1);
             
             RectTransform stackRect = stackTextObj.GetComponent<RectTransform>();
             stackRect.anchorMin = Vector2.zero;

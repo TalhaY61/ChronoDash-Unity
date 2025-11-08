@@ -235,6 +235,58 @@ namespace ChronoDash.Managers {
             isDarknessActive = false;
         }
         
+        // ============================================================================
+        // PUBLIC METHODS for Arena Integration
+        // ============================================================================
+        
+        /// <summary>
+        /// Trigger Gravity Flip effect (used by ArenaManager for viewer interactions).
+        /// </summary>
+        public void TriggerGravityFlip()
+        {
+            if (gravityFlipEffect != null && !isGravityFlipActive)
+            {
+                StartCoroutine(TriggerEffect(EffectType.GravityFlip, normalWarningTime));
+                Debug.Log("[GameplayEffectsManager] Gravity Flip triggered by viewer!");
+            }
+            else
+            {
+                Debug.LogWarning("[GameplayEffectsManager] Gravity Flip already active or not configured");
+            }
+        }
+        
+        /// <summary>
+        /// Trigger Screen Shake effect (used by ArenaManager for viewer interactions).
+        /// </summary>
+        public void TriggerScreenShake()
+        {
+            if (screenShakeEffect != null && !isScreenShakeActive)
+            {
+                StartCoroutine(TriggerEffect(EffectType.ScreenShake, normalWarningTime));
+                Debug.Log("[GameplayEffectsManager] Screen Shake triggered by viewer!");
+            }
+            else
+            {
+                Debug.LogWarning("[GameplayEffectsManager] Screen Shake already active or not configured");
+            }
+        }
+        
+        /// <summary>
+        /// Trigger Darkness effect (used by ArenaManager for viewer interactions).
+        /// </summary>
+        public void TriggerDarkness()
+        {
+            if (darknessEffect != null && !isDarknessActive)
+            {
+                StartCoroutine(TriggerEffect(EffectType.Darkness, normalWarningTime));
+                Debug.Log("[GameplayEffectsManager] Darkness triggered by viewer!");
+            }
+            else
+            {
+                Debug.LogWarning("[GameplayEffectsManager] Darkness already active or not configured");
+            }
+        }
+        
         private enum EffectType {
             GravityFlip,
             ScreenShake,

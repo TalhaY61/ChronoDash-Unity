@@ -10,12 +10,6 @@ namespace ChronoDash.Managers
         Ice,
         Lava
     }
-
-    /// <summary>
-    /// Manages world/environment cycling with different backgrounds and platforms
-    /// Randomly selects a world at game start or cycles during gameplay
-    /// Each world has unique mechanics and obstacles
-    /// </summary>
     public class WorldManager : MonoBehaviour
     {
         [System.Serializable]
@@ -40,22 +34,12 @@ namespace ChronoDash.Managers
         [SerializeField] private SpriteRenderer[] platformRenderers; // Multiple platform segments
 
         [Header("Scrolling References")]
-        [SerializeField] private ChronoDash.Environment.BackgroundScroller[] scrollers; // Both background and ground
+        [SerializeField] private Environment.BackgroundScroller[] scrollers; // Both background and ground
 
         [Header("World Rotation Settings")]
         [SerializeField] private float worldRotationInterval = 60f; // Switch worlds every 60 seconds
         [SerializeField] private bool autoRotateWorlds = true;
         [SerializeField] private float difficultyScalingDelay = 10f; // Start easy for 10 seconds
-
-        [Header("World-Specific Effect Prefabs")]
-        [SerializeField] private GameObject iceTornadoPrefab;
-        [SerializeField] private GameObject fireBlastPrefab;
-
-        [Header("World Effect Timing")]
-        [SerializeField] private float iceMinInterval = 30f;
-        [SerializeField] private float iceMaxInterval = 60f;
-        [SerializeField] private float lavaMinInterval = 30f;
-        [SerializeField] private float lavaMaxInterval = 60f;
 
         [Header("Spawn Settings")]
         [SerializeField] private Transform playerTransform;
@@ -66,10 +50,6 @@ namespace ChronoDash.Managers
         private float worldTimer = 0f;
         private bool isGameActive = false;
         private bool isDifficultyScaled = false;
-
-        private Coroutine jungleEffectCoroutine;
-        private Coroutine iceEffectCoroutine;
-        private Coroutine lavaEffectCoroutine;
 
         // Events
         public System.Action<WorldType> OnWorldChanged;
@@ -82,11 +62,7 @@ namespace ChronoDash.Managers
 
         private void Start()
         {
-            if (worlds == null || worlds.Length == 0)
-            {
-                Debug.LogError("❌ WorldManager: No worlds defined!");
-                return;
-            }
+            if (worlds == null || worlds.Length == 0) return;
 
             // Find player if not assigned
             if (playerTransform == null)
@@ -109,7 +85,6 @@ namespace ChronoDash.Managers
                     currentWorldIndex = menuBackgroundIndex;
                     currentWorld = worlds[currentWorldIndex].type;
                     ApplyWorldVisuals(currentWorldIndex); // Apply visual only, no mechanics
-                    Debug.Log($"🎨 WorldManager: Synced to menu background: {worlds[currentWorldIndex].displayName}");
                 }
             }
 
@@ -125,8 +100,6 @@ namespace ChronoDash.Managers
             if (!isDifficultyScaled && currentWorld == WorldType.Desert && worldTimer >= difficultyScalingDelay)
             {
                 isDifficultyScaled = true;
-                ScaleUpDifficulty();
-                Debug.Log($"⚡ Difficulty scaled up after {difficultyScalingDelay}s!");
             }
 
             // Handle world rotation
@@ -143,9 +116,6 @@ namespace ChronoDash.Managers
             }
         }
 
-        /// <summary>
-        /// Called by GameManager when game starts/stops
-        /// </summary>
         public void SetGameActive(bool active)
         {
             isGameActive = active;
@@ -162,9 +132,6 @@ namespace ChronoDash.Managers
             }
             else
             {
-                // Clean up world effects when game stops
-                CleanupWorldEffects();
-
                 // Stop scrolling
                 StopScrolling();
             }
@@ -172,8 +139,6 @@ namespace ChronoDash.Managers
 
         private void StartScrolling()
         {
-            Debug.Log($"🎬 WorldManager: Starting scrolling for {(scrollers != null ? scrollers.Length : 0)} scrollers");
-
             if (scrollers != null)
             {
                 foreach (var scroller in scrollers)
@@ -182,15 +147,7 @@ namespace ChronoDash.Managers
                     {
                         scroller.SetScrolling(true);
                     }
-                    else
-                    {
-                        Debug.LogWarning("⚠️ WorldManager: Null scroller in array!");
-                    }
                 }
-            }
-            else
-            {
-                Debug.LogWarning("⚠️ WorldManager: Scrollers array is null!");
             }
         }
 
@@ -208,9 +165,6 @@ namespace ChronoDash.Managers
             }
         }
 
-        /// <summary>
-        /// Randomly select and apply a world
-        /// </summary>
         public void SelectRandomWorld()
         {
             if (worlds.Length == 0) return;
@@ -219,9 +173,6 @@ namespace ChronoDash.Managers
             ApplyWorld(currentWorldIndex);
         }
 
-        /// <summary>
-        /// Select specific world by type
-        /// </summary>
         public void SelectWorld(WorldType type)
         {
             for (int i = 0; i < worlds.Length; i++)
@@ -232,8 +183,6 @@ namespace ChronoDash.Managers
                     return;
                 }
             }
-
-            Debug.LogWarning($"⚠️ World type {type} not found!");
         }
 
         /// <summary>
@@ -279,8 +228,6 @@ namespace ChronoDash.Managers
             {
                 Camera.main.backgroundColor = world.ambientColor;
             }
-
-            Debug.Log($"🎨 Applied world visuals only: {world.displayName} ({currentWorld})");
         }
 
         private void ApplyWorld(int index)
@@ -322,205 +269,6 @@ namespace ChronoDash.Managers
             {
                 OnWorldObstaclesChanged?.Invoke(currentWorld, world.obstacleVariants);
             }
-
-            Debug.Log($"🌍 World changed to: {world.displayName} ({currentWorld})");
-            LogWorldInfo(world);
-
-            // Apply world-specific mechanics
-            ApplyWorldMechanics(currentWorld);
-        }
-
-        private void LogWorldInfo(WorldData world)
-        {
-            string obstacleList = "None";
-            if (world.obstacleVariants != null && world.obstacleVariants.Length > 0)
-            {
-                obstacleList = string.Join(", ", System.Array.ConvertAll(world.obstacleVariants,
-                    obj => obj != null ? obj.name : "null"));
-            }
-
-            Debug.Log($"   Obstacles: {obstacleList}");
-
-            switch (world.type)
-            {
-                case WorldType.Desert:
-                    Debug.Log("   Mechanic: None (basic world)");
-                    break;
-                case WorldType.Jungle:
-                    Debug.Log("   Mechanic: Random gravity flips (after 10s)");
-                    break;
-                case WorldType.Ice:
-                    Debug.Log("   Mechanic: Freezing projectiles (after 10s)");
-                    break;
-                case WorldType.Lava:
-                    Debug.Log("   Mechanic: Floor bursts at player position (after 10s)");
-                    break;
-            }
-        }
-
-        private void ApplyWorldMechanics(WorldType world)
-        {
-            // Clean up previous world effects first
-            CleanupWorldEffects();
-
-            // Apply new world-specific mechanics
-            switch (world)
-            {
-                case WorldType.Desert:
-                    ApplyDesertMechanics();
-                    break;
-
-                case WorldType.Jungle:
-                    ApplyJungleMechanics();
-                    break;
-
-                case WorldType.Ice:
-                    ApplyIceMechanics();
-                    break;
-
-                case WorldType.Lava:
-                    ApplyLavaMechanics();
-                    break;
-            }
-        }
-
-        #region World-Specific Mechanics
-
-        private void ApplyDesertMechanics()
-        {
-            // Desert world - no specific mechanics
-            Debug.Log("🏜️ Desert: No world-specific mechanics");
-        }
-
-        private void ApplyJungleMechanics()
-        {
-            // Jungle world - no specific mechanics anymore
-            // Effects are now handled by GameplayEffectsManager globally
-            Debug.Log("🌲 Jungle: No world-specific mechanics (effects are global now)");
-        }
-
-        private void ApplyIceMechanics()
-        {
-            if (iceTornadoPrefab == null)
-            {
-                Debug.LogError("❌ Ice: iceTornadoPrefab is NULL! Assign in Inspector.");
-                return;
-            }
-
-            Debug.Log("❄️ Ice: Starting tornado cycle");
-            iceEffectCoroutine = StartCoroutine(SpawnIceTornadoesCoroutine());
-        }
-
-        private void ApplyLavaMechanics()
-        {
-            if (fireBlastPrefab == null)
-            {
-                Debug.LogError("❌ Lava: fireBlastPrefab is NULL! Assign in Inspector.");
-                return;
-            }
-
-            if (playerTransform == null)
-            {
-                Debug.LogError("❌ Lava: playerTransform is NULL! Assign in Inspector.");
-                return;
-            }
-
-            Debug.Log("🔥 Lava: Starting fire blast cycle");
-            lavaEffectCoroutine = StartCoroutine(SpawnFireBlastsCoroutine());
-        }
-
-        #endregion
-
-        #region World Mechanics Coroutines
-
-        // Jungle gravity flip removed - now handled by GameplayEffectsManager globally
-
-        private IEnumerator SpawnIceTornadoesCoroutine()
-        {
-            while (isGameActive && currentWorld == WorldType.Ice)
-            {
-                float waitTime = Random.Range(iceMinInterval, iceMaxInterval);
-                Debug.Log($"❄️ Ice: Next tornado in {waitTime:F1}s");
-
-                yield return new WaitForSeconds(waitTime);
-
-                if (!isGameActive || currentWorld != WorldType.Ice) break;
-
-                float randomY = Random.Range(-4.35f, -2.30f);
-                Vector3 spawnPos = new Vector3(-7f, randomY, 0f);
-
-                GameObject tornado = Instantiate(iceTornadoPrefab, spawnPos, Quaternion.identity);
-
-                Debug.Log($"❄️ Ice: Tornado spawned at {spawnPos}");
-            }
-        }
-
-        private IEnumerator SpawnFireBlastsCoroutine()
-        {
-            while (isGameActive && currentWorld == WorldType.Lava)
-            {
-                float waitTime = Random.Range(lavaMinInterval, lavaMaxInterval);
-                Debug.Log($"🔥 Lava: Next fire blast in {waitTime:F1}s");
-
-                yield return new WaitForSeconds(waitTime);
-
-                if (!isGameActive || currentWorld != WorldType.Lava || playerTransform == null) break;
-
-                // No obstacle freeze - let game continue
-
-                // Player X, Fixed Y: -3.7
-                Vector3 spawnPos = new Vector3(playerTransform.position.x, -3.7f, 0f);
-
-                GameObject blast = Instantiate(fireBlastPrefab, spawnPos, Quaternion.identity);
-
-                Debug.Log($"🔥 Lava: Fire blast spawned at {spawnPos}");
-            }
-        }
-
-        private IEnumerator FreezeObstaclesCoroutine(float duration)
-        {
-            if (obstaclesManager == null)
-            {
-                Debug.LogWarning("⚠️ ObstaclesManager is NULL - cannot freeze obstacles");
-                yield break;
-            }
-
-            obstaclesManager.SetSpeedMultiplier(0f);
-            Debug.Log($"🧊 Obstacles frozen for {duration:F1}s");
-
-            yield return new WaitForSeconds(duration);
-
-            obstaclesManager.SetSpeedMultiplier(1f);
-            Debug.Log("✅ Obstacles unfrozen");
-        }
-
-        #endregion
-
-        private void ScaleUpDifficulty()
-        {
-            // Desert difficulty scaling disabled for now
-            Debug.Log("⚡ Difficulty scaling (sandstorm disabled for now)");
-        }
-
-        private void CleanupWorldEffects()
-        {
-            if (jungleEffectCoroutine != null)
-            {
-                StopCoroutine(jungleEffectCoroutine);
-                jungleEffectCoroutine = null;
-            }
-
-            if (iceEffectCoroutine != null)
-            {
-                StopCoroutine(iceEffectCoroutine);
-                iceEffectCoroutine = null;
-            }
-
-            if (lavaEffectCoroutine != null)
-            {
-                StopCoroutine(lavaEffectCoroutine);
-                lavaEffectCoroutine = null;
-            }
         }
 
         public WorldData GetCurrentWorldData()
@@ -532,9 +280,6 @@ namespace ChronoDash.Managers
             return null;
         }
 
-        /// <summary>
-        /// Get obstacle variants for current world
-        /// </summary>
         public GameObject[] GetCurrentWorldObstacles()
         {
             if (currentWorldIndex >= 0 && currentWorldIndex < worlds.Length)
@@ -544,9 +289,6 @@ namespace ChronoDash.Managers
             return null;
         }
 
-        /// <summary>
-        /// Get obstacle variants for specific world type
-        /// </summary>
         public GameObject[] GetWorldObstacles(WorldType worldType)
         {
             foreach (var world in worlds)
@@ -559,30 +301,15 @@ namespace ChronoDash.Managers
             return null;
         }
 
-        /// <summary>
-        /// Get time remaining until next world rotation
-        /// </summary>
         public float GetTimeUntilNextWorld()
         {
             return worldRotationInterval - worldTimer;
         }
 
-        /// <summary>
-        /// Force immediate world rotation (for testing or viewer interaction)
-        /// </summary>
         public void ForceWorldRotation()
         {
             worldTimer = 0f;
             SelectRandomWorld();
-        }
-
-        // TODO: Viewer interaction - allow viewers to purchase/trigger world changes
-        public void OnViewerWorldChange(WorldType requestedWorld)
-        {
-            // This will be called from Solana integration later
-            Debug.Log($"👁️ Viewer requested world change to: {requestedWorld}");
-            worldTimer = 0f; // Reset rotation timer
-            SelectWorld(requestedWorld);
         }
     }
 }
