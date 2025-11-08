@@ -20,7 +20,7 @@ namespace ChronoDash.Managers
         [Header("Arena Status")]
         [SerializeField] private bool arenaActive = false;
         
-        private ArenaWebSocketClient websocketClient;
+        private ArenaSocketIOClient websocketClient;
         
         public bool IsArenaActive => arenaActive;
         
@@ -91,7 +91,7 @@ namespace ChronoDash.Managers
             websocketClient.OnArenaCountdownStarted += HandleArenaCountdown;
             websocketClient.OnArenaBegins += HandleArenaBegins;
             websocketClient.OnImmediateItemDrop += HandleImmediateItemDrop;
-            websocketClient.OnPlayerBoostActivated += HandlePlayerBoost;
+            websocketClient.OnBoostReceived += HandlePlayerBoost;
             websocketClient.OnPackageDrop += HandlePackageDrop;
             
             Debug.Log("[ArenaManager] WebSocket listeners registered");
@@ -295,7 +295,7 @@ namespace ChronoDash.Managers
                 websocketClient.OnArenaCountdownStarted -= HandleArenaCountdown;
                 websocketClient.OnArenaBegins -= HandleArenaBegins;
                 websocketClient.OnImmediateItemDrop -= HandleImmediateItemDrop;
-                websocketClient.OnPlayerBoostActivated -= HandlePlayerBoost;
+                websocketClient.OnBoostReceived -= HandlePlayerBoost;
                 websocketClient.OnPackageDrop -= HandlePackageDrop;
             }
         }

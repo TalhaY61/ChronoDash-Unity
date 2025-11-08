@@ -17,7 +17,7 @@ namespace ChronoDash.Core.Auth
         private readonly VorldAuthService authService;
         
         private GameState currentGameState;
-        private ArenaWebSocketClient websocketClient;
+        private ArenaSocketIOClient websocketClient;
         
         // Events for WebSocket - Will be used when WebSocket is implemented
         #pragma warning disable CS0067 // Event is never used (will be invoked by WebSocket client)
@@ -87,23 +87,26 @@ namespace ChronoDash.Core.Auth
                         if (response.success && response.data != null)
                         {
                             currentGameState = response.data;
-                            config.Log($"Game initialized: {currentGameState.gameId}");
+                            config.Log($"✅ Game initialized: {currentGameState.gameId}");
                             config.Log($"WebSocket URL: {currentGameState.websocketUrl}");
                             config.Log($"Arena Active: {currentGameState.arenaActive}");
                             config.Log($"Countdown Started: {currentGameState.countdownStarted}");
                             
-                            // Create and connect WebSocket
-                            websocketClient = new ArenaWebSocketClient(
-                                currentGameState.websocketUrl,
-                                authService.AccessToken,
-                                config.vorldAppId,
-                                config
+                            // Create Socket.IO client with authentication
+                            websocketClient = new ArenaSocketIOClient(
+                                currentGameState.websocketUrl,      // Server URL (will be converted to Socket.IO format)
+                                authService.AccessToken,            // JWT token
+                                config.vorldAppId,                  // Vorld App ID
+                                currentGameState.gameId,            // Game ID
+                                config.arenaGameId,                 // Arena Game ID
+                                config                              // Config for logging
                             );
                             
-                            // Connect asynchronously
-                            _ = websocketClient.ConnectAsync();
+                            // Connect asynchronously to Socket.IO server
+                            websocketClient.ConnectAsync();
                             
-                            config.Log("WebSocket connection initiated");
+                            config.Log("🔌 Socket.IO connection initiated with authentication");
+                            config.Log("💡 Auth: token ✓ | gameId ✓ | appId ✓ | arenaGameId ✓");
                         }
                         else
                         {
@@ -351,9 +354,9 @@ namespace ChronoDash.Core.Auth
         }
         
         /// <summary>
-        /// Get the WebSocket client instance (used by ArenaManager).
+        /// Get the Socket.IO client instance (used by ArenaManager).
         /// </summary>
-        public ArenaWebSocketClient GetWebSocketClient()
+        public ArenaSocketIOClient GetWebSocketClient()
         {
             return websocketClient;
         }

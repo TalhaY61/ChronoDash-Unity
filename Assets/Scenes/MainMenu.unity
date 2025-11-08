@@ -7199,6 +7199,7 @@ MonoBehaviour:
     sprite: {fileID: 21300000, guid: 062d3373938554f45b050f65e05f2667, type: 3}
   changeInterval: 30
   fadeDuration: 1.5
+  backgroundBrightness: 0.6
 --- !u!4 &1984549568
 Transform:
   m_ObjectHideFlags: 0

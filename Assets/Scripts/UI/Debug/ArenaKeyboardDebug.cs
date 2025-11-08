@@ -1,5 +1,6 @@
 using UnityEngine;
 using ChronoDash.Managers;
+using ChronoDash.Core.Auth;
 using System.Reflection;
 using UnityEngine.InputSystem;
 
@@ -60,6 +61,10 @@ namespace ChronoDash.UI.Debug
                 return;
             }
             
+            // Only allow keyboard shortcuts when Arena is active (logged in and Arena started)
+            if (AuthManager.Instance == null || !AuthManager.Instance.IsArenaActive)
+                return;
+            
             var keyboard = Keyboard.current;
             if (keyboard == null) return;
             
@@ -96,7 +101,7 @@ namespace ChronoDash.UI.Debug
             if (keyboard.gKey.wasPressedThisFrame)
                 SimulateEffect("gravity_flip", "Gravity Flip");
             
-            if (keyboard.sKey.wasPressedThisFrame)
+            if (keyboard.qKey.wasPressedThisFrame)
                 SimulateEffect("screen_shake", "Screen Shake");
             
             if (keyboard.dKey.wasPressedThisFrame)

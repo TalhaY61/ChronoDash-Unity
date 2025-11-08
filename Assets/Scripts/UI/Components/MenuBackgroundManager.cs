@@ -25,6 +25,10 @@ namespace ChronoDash.Managers {
         [Header("Fade Settings")]
         [SerializeField] private float fadeDuration = 1.5f;
         
+        [Header("Dimming Settings")]
+        [Tooltip("Darken backgrounds to improve text visibility (0 = black, 1 = full brightness)")]
+        [SerializeField] [Range(0f, 1f)] private float backgroundBrightness = 0.6f;
+        
         [Header("UI References (Auto-found)")]
         private Image currentBackgroundImage;
         private Image nextBackgroundImage;
@@ -97,6 +101,11 @@ namespace ChronoDash.Managers {
             nextCanvasGroup = nextBG.GetComponent<CanvasGroup>();
             
             if (currentBackgroundImage == null || nextBackgroundImage == null) return;
+            
+            // Apply dimming to both background images
+            Color dimmedColor = new Color(backgroundBrightness, backgroundBrightness, backgroundBrightness, 1f);
+            currentBackgroundImage.color = dimmedColor;
+            nextBackgroundImage.color = dimmedColor;
             
             // Set initial background
             currentBackgroundImage.sprite = backgrounds[currentBackgroundIndex].sprite;
