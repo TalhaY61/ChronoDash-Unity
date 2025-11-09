@@ -4,12 +4,12 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Unity Web Player | ChronoDash</title>
-    <link rel="shortcut icon" href="/ChronoDash-Unity/TemplateData/favicon.ico">
-    <link rel="stylesheet" href="/ChronoDash-Unity/TemplateData/style.css">
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
   </head>
   <body>
     <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" width=960 height=540 tabindex="-1"></canvas>
+      <canvas id="unity-canvas" width=1920 height=1080 tabindex="-1"></canvas>
       <div id="unity-loading-bar">
         <div id="unity-logo"></div>
         <div id="unity-progress-bar-empty">
@@ -51,14 +51,14 @@
         updateBannerVisibility();
       }
 
-      var buildUrl = "/ChronoDash-Unity/Build";
+      var buildUrl = "Build";
       var loaderUrl = buildUrl + "/WebGL-Build.loader.js";
       var config = {
         arguments: [],
         dataUrl: buildUrl + "/WebGL-Build.data.unityweb",
         frameworkUrl: buildUrl + "/WebGL-Build.framework.js.unityweb",
         codeUrl: buildUrl + "/WebGL-Build.wasm.unityweb",
-        streamingAssetsUrl: "/ChronoDash-Unity/StreamingAssets",
+        streamingAssetsUrl: "StreamingAssets",
         companyName: "Talha Yaz",
         productName: "ChronoDash",
         productVersion: "1.0",
@@ -104,8 +104,8 @@
 
       } else {
         // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
-        canvas.style.width = "960px";
-        canvas.style.height = "540px";
+        canvas.style.width = "1920px";
+        canvas.style.height = "1080px";
       }
 
       document.querySelector("#unity-loading-bar").style.display = "block";
