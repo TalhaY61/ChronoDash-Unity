@@ -97,10 +97,10 @@ ChronoDash supports Vorld Arena Arcade, allowing your Twitch/YouTube viewers to 
 5. Begin streaming; viewers can now interact with your game!
 
 ### Login
-![Login](Assets/Screenshots/ArcadeAirdropLogin.png.png)
+![Login](Assets/Screenshots/ArcadeAirdropLogin.png)
 
 ### Profile
-![Profile](Assets/Screenshots/ArcadeAirdropProfile.png.png)
+![Profile](Assets/Screenshots/ArcadeAirdropProfile.png)
 
 ---
 
@@ -116,3 +116,4 @@ ChronoDash supports Vorld Arena Arcade, allowing your Twitch/YouTube viewers to 
 ## Developer
 Talha Yaz
 GitHub: [@TalhaY61](https://github.com/TalhaY61)
+itch.io: [@TalhaY61] (https://talhay61.itch.io/)
