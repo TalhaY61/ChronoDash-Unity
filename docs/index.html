@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Unity Web Player | ChronoDash</title>
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <link rel="stylesheet" href="TemplateData/style.css">
+    <link rel="shortcut icon" href="/ChronoDash-Unity/TemplateData/favicon.ico">
+    <link rel="stylesheet" href="/ChronoDash-Unity/TemplateData/style.css">
   </head>
   <body>
     <div id="unity-container" class="unity-desktop">
@@ -51,14 +51,14 @@
         updateBannerVisibility();
       }
 
-      var buildUrl = "Build";
+      var buildUrl = "/ChronoDash-Unity/Build";
       var loaderUrl = buildUrl + "/WebGL-Build.loader.js";
       var config = {
         arguments: [],
         dataUrl: buildUrl + "/WebGL-Build.data.unityweb",
         frameworkUrl: buildUrl + "/WebGL-Build.framework.js.unityweb",
         codeUrl: buildUrl + "/WebGL-Build.wasm.unityweb",
-        streamingAssetsUrl: "StreamingAssets",
+        streamingAssetsUrl: "/ChronoDash-Unity/StreamingAssets",
         companyName: "Talha Yaz",
         productName: "ChronoDash",
         productVersion: "1.0",
