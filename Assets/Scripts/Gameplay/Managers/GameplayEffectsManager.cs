@@ -217,7 +217,15 @@ namespace ChronoDash.Managers {
             return 0;
         }
         
-        private void StopAllActiveEffects() {
+        /// <summary>
+        /// Stops all active world effects immediately.
+        /// Called when player dies/restarts to reset game state.
+        /// </summary>
+        public void StopAllActiveEffects() {
+            // Stop all running coroutines (effects in progress, warnings, etc.)
+            StopAllCoroutines();
+            
+            // Force stop each effect
             if (gravityFlipEffect != null) {
                 gravityFlipEffect.ForceStopEffect();
             }
@@ -230,9 +238,13 @@ namespace ChronoDash.Managers {
                 darknessEffect.ForceStopEffect();
             }
             
+            // Reset state flags
             isGravityFlipActive = false;
             isScreenShakeActive = false;
             isDarknessActive = false;
+            
+            // Clear main effects coroutine reference
+            effectsCoroutine = null;
         }
         
         // ============================================================================
