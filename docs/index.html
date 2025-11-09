@@ -9,7 +9,7 @@
   </head>
   <body>
     <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" width=1920 height=1080 tabindex="-1"></canvas>
+      <canvas id="unity-canvas" width=960 height=540 tabindex="-1"></canvas>
       <div id="unity-loading-bar">
         <div id="unity-logo"></div>
         <div id="unity-progress-bar-empty">
@@ -103,9 +103,19 @@
 
 
       } else {
-        // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
-        canvas.style.width = "1920px";
-        canvas.style.height = "1080px";
+        // Desktop style: Responsive canvas that fits browser window
+        // Calculate size maintaining 16:9 aspect ratio
+        var containerWidth = window.innerWidth * 0.95; // 95% of window width
+        var containerHeight = containerWidth * (9/16); // Maintain 16:9 ratio
+        
+        // If height is too tall, scale by height instead
+        if (containerHeight > window.innerHeight * 0.85) {
+          containerHeight = window.innerHeight * 0.85;
+          containerWidth = containerHeight * (16/9);
+        }
+        
+        canvas.style.width = containerWidth + "px";
+        canvas.style.height = containerHeight + "px";
       }
 
       document.querySelector("#unity-loading-bar").style.display = "block";
@@ -127,6 +137,22 @@
             };
 
       document.body.appendChild(script);
+
+      // Add window resize handler for responsive scaling
+      window.addEventListener('resize', function() {
+        if (!/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+          var containerWidth = window.innerWidth * 0.95;
+          var containerHeight = containerWidth * (9/16);
+          
+          if (containerHeight > window.innerHeight * 0.85) {
+            containerHeight = window.innerHeight * 0.85;
+            containerWidth = containerHeight * (16/9);
+          }
+          
+          canvas.style.width = containerWidth + "px";
+          canvas.style.height = containerHeight + "px";
+        }
+      });
 
     </script>
   </body>
