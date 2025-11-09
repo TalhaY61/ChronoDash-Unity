@@ -6,8 +6,6 @@
 [Ll]ibrary/
 [Tt]emp/
 [Oo]bj/
-[Bb]uild/
-[Bb]uilds/
 [Ll]ogs/
 [Uu]ser[Ss]ettings/
 MemoryCaptures/
@@ -120,7 +118,6 @@ node_modules/
 package-lock.json
 yarn.lock
 dist/
-build/
 .npmrc
 npm-debug.log*
 
@@ -134,6 +131,7 @@ temp/
 
 # Any exported web build that shouldn't be in repo
 WebGLBuild/
+WebGL-Build/
 Builds/WebGL/
 web-build/
 dist-web/
@@ -148,3 +146,4 @@ dist-web/
 !ProjectSettings/
 !.gitignore
 !README.md
+!docs/
