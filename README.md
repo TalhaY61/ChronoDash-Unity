@@ -49,6 +49,9 @@ ChronoDash is an endless runner where you dodge obstacles across four visually d
 
 ---
 
+## Gameplay Demo
+https://github.com/user-attachments/assets/9d356f0b-1d31-4a08-b1c0-6295b1a614a2
+
 ## Screenshots
 ### Main Menu
 ![Main Menu](Assets/Screenshots/MainMenu.png)
