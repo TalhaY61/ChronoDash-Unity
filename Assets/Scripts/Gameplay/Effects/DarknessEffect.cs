@@ -1,211 +1,140 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
 namespace ChronoDash.Effects {
-    /// <summary>
-    /// Darkness Effect - Creates spotlight vision around player.
-    /// Everything outside radius is pitch black.
-    /// Uses a shader-based approach for optimal performance.
-    /// </summary>
     public class DarknessEffect : MonoBehaviour {
         [Header("Effect Settings")]
         [SerializeField] private float effectDuration = 10f;
-        [SerializeField] private float spotlightRadius = 250f; // Screen pixels (increased for visibility)
-        [SerializeField] private float fadeInDuration = 1.5f;
-        [SerializeField] private float fadeOutDuration = 1.5f;
-        [SerializeField] private float edgeSoftness = 100f; // Gradient edge size (increased for smoother transition)
-        
-        // Runtime-created objects (no prefabs needed!)
-        private GameObject darknessOverlay;
+        [SerializeField] private float spotlightRadius = 250f;
+        [SerializeField] private float edgeSoftness = 50f;
+        [SerializeField] private float fadeInDuration = 1.0f;
+        [SerializeField] private float fadeOutDuration = 1.0f;
+
+        private GameObject overlayObj;
         private Canvas overlayCanvas;
-        private Image darknessImage;
+        private Image overlayImage;
         private Material darknessMaterial;
         private Transform playerTransform;
+        private Camera mainCamera;
         private bool isActive = false;
-        
+        private float currentOpacity = 0f;
+        private bool isFadingIn = false;
+        private bool isFadingOut = false;
+
         public bool IsActive => isActive;
-        
+
         private void Awake() {
-            // Find player
             GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player != null) {
-                playerTransform = player.transform;
-            }
-            
-            // Find or create canvas for overlay
-            if (overlayCanvas == null) {
-                overlayCanvas = FindCanvasForOverlay();
-            }
+            if (player != null) playerTransform = player.transform;
+            mainCamera = Camera.main;
+            overlayCanvas = FindCanvasForOverlay();
         }
-        
-        /// <summary>
-        /// Trigger the darkness effect with warning notification
-        /// </summary>
+
         public IEnumerator TriggerEffect(float warningTime) {
-            if (isActive) yield break;
-            
-            if (playerTransform == null) yield break;
-            
+            if (isActive || playerTransform == null) yield break;
             isActive = true;
-                        
-            // Create darkness overlay
-            CreateDarknessOverlay();
-            
-            // Fade in darkness
-            yield return FadeDarkness(0f, 1f, fadeInDuration);
-            
-            // Wait for effect duration - shader updates spotlight automatically
+            CreateOverlay();
+            yield return StartCoroutine(FadeIn());
             yield return new WaitForSeconds(effectDuration);
-            
-            // Fade out darkness
-            yield return FadeDarkness(1f, 0f, fadeOutDuration);
-            
-            // Clean up
-            DestroyDarknessOverlay();
-            
+            yield return StartCoroutine(FadeOut());
+            DestroyOverlay();
             isActive = false;
         }
-    
+
         public void ForceStopEffect() {
             StopAllCoroutines();
-            DestroyDarknessOverlay();
+            DestroyOverlay();
             isActive = false;
         }
-        
-        private void CreateDarknessOverlay() {
+
+        private void CreateOverlay() {
             if (overlayCanvas == null) return;
-            
-            // Create overlay GameObject
-            darknessOverlay = new GameObject("DarknessOverlay");
-            darknessOverlay.transform.SetParent(overlayCanvas.transform, false);
-            
-            // Add RectTransform - full screen
-            RectTransform rectTransform = darknessOverlay.AddComponent<RectTransform>();
+            overlayObj = new GameObject("DarknessOverlay");
+            overlayObj.transform.SetParent(overlayCanvas.transform, false);
+            RectTransform rectTransform = overlayObj.AddComponent<RectTransform>();
             rectTransform.anchorMin = Vector2.zero;
             rectTransform.anchorMax = Vector2.one;
             rectTransform.offsetMin = Vector2.zero;
             rectTransform.offsetMax = Vector2.zero;
-            
-            // Add Image component
-            darknessImage = darknessOverlay.AddComponent<Image>();
-            darknessImage.color = new Color(0f, 0f, 0f, 0f); // Start transparent
-            darknessImage.raycastTarget = false;
-            
-            // Create shader material
-            CreateShaderMaterial();
-            darknessImage.material = darknessMaterial;
-            
-            // Set a white texture (shader will handle the spotlight)
-            Texture2D whiteTexture = new Texture2D(1, 1);
-            whiteTexture.SetPixel(0, 0, Color.white);
-            whiteTexture.Apply();
-            darknessImage.sprite = Sprite.Create(whiteTexture, new Rect(0, 0, 1, 1), Vector2.zero);
-        }
-        
-        private void CreateShaderMaterial() {
-            // Try to find the custom shader
+            overlayImage = overlayObj.AddComponent<Image>();
+            overlayImage.raycastTarget = false;
             Shader shader = Shader.Find("Custom/SpotlightDarkness");
-            
-            if (shader == null) {
-                // Fallback to default UI shader
-                shader = Shader.Find("UI/Default");
-            }
-            
-            darknessMaterial = new Material(shader);
-            
-            // Initialize shader properties
-            UpdateShaderProperties();
-        }
-        
-        private void Update() {
-            // Update spotlight position every frame (GPU-side, very fast)
-            if (isActive && darknessMaterial != null && playerTransform != null) {
-                UpdateShaderProperties();
+            if (shader != null) {
+                darknessMaterial = new Material(shader);
+                overlayImage.material = darknessMaterial;
+                Texture2D whiteTexture = new Texture2D(1, 1);
+                whiteTexture.SetPixel(0, 0, Color.white);
+                whiteTexture.Apply();
+                overlayImage.sprite = Sprite.Create(whiteTexture, new Rect(0, 0, 1, 1), Vector2.zero);
+            } else {
+                Debug.LogError("[DarknessEffect] Shader not found!");
             }
         }
-        
-        private void UpdateShaderProperties() {
-            if (darknessMaterial == null || playerTransform == null) return;
-            
-            // Get player screen position
-            Vector3 playerScreenPos = Camera.main.WorldToScreenPoint(playerTransform.position);
-            
-            // Set shader properties
-            darknessMaterial.SetVector("_SpotlightCenter", new Vector4(playerScreenPos.x, playerScreenPos.y, 0, 0));
-            darknessMaterial.SetFloat("_SpotlightRadius", spotlightRadius);
-            darknessMaterial.SetFloat("_EdgeSoftness", edgeSoftness);
-        }
-        
-        private IEnumerator FadeDarkness(float fromAlpha, float toAlpha, float duration) {
-            if (darknessImage == null) yield break;
-            
-            float elapsed = 0f;
-            
-            while (elapsed < duration) {
-                elapsed += Time.deltaTime;
-                float t = elapsed / duration;
-                float alpha = Mathf.Lerp(fromAlpha, toAlpha, t);
-                
-                // Update image alpha
-                Color color = darknessImage.color;
-                color.a = alpha;
-                darknessImage.color = color;
-                
-                // Also update shader opacity
-                if (darknessMaterial != null) {
-                    darknessMaterial.SetFloat("_Opacity", alpha);
-                }
-                
+
+        private IEnumerator FadeIn() {
+            float t = 0f;
+            isFadingIn = true;
+            while (t < fadeInDuration) {
+                t += Time.deltaTime;
+                currentOpacity = Mathf.Lerp(0f, 1f, t / fadeInDuration);
                 yield return null;
             }
-            
-            // Ensure final alpha
-            Color finalColor = darknessImage.color;
-            finalColor.a = toAlpha;
-            darknessImage.color = finalColor;
-            
-            if (darknessMaterial != null) {
-                darknessMaterial.SetFloat("_Opacity", toAlpha);
-            }
+            currentOpacity = 1f;
+            isFadingIn = false;
         }
-        
-        private void DestroyDarknessOverlay() {
+
+        private IEnumerator FadeOut() {
+            float t = 0f;
+            isFadingOut = true;
+            while (t < fadeOutDuration) {
+                t += Time.deltaTime;
+                currentOpacity = Mathf.Lerp(1f, 0f, t / fadeOutDuration);
+                yield return null;
+            }
+            currentOpacity = 0f;
+            isFadingOut = false;
+        }
+
+        private void Update() {
+            if (!isActive || overlayImage == null || darknessMaterial == null || playerTransform == null || mainCamera == null) return;
+            Vector3 playerWorldPos = playerTransform.position;
+            Vector3 screenPoint = mainCamera.WorldToScreenPoint(playerWorldPos);
+            darknessMaterial.SetVector("_SpotlightCenter", new Vector4(screenPoint.x, screenPoint.y, 0, 0));
+            darknessMaterial.SetFloat("_SpotlightRadius", spotlightRadius);
+            darknessMaterial.SetFloat("_EdgeSoftness", edgeSoftness);
+            darknessMaterial.SetFloat("_Opacity", currentOpacity);
+        }
+
+        private void DestroyOverlay() {
             if (darknessMaterial != null) {
                 Destroy(darknessMaterial);
                 darknessMaterial = null;
             }
-            
-            if (darknessOverlay != null) {
-                Destroy(darknessOverlay);
-                darknessOverlay = null;
-                darknessImage = null;
+            if (overlayObj != null) {
+                Destroy(overlayObj);
+                overlayObj = null;
+                overlayImage = null;
             }
         }
-        
+
         private Canvas FindCanvasForOverlay() {
-            // Find main game canvas
             Canvas[] canvases = FindObjectsByType<Canvas>(FindObjectsSortMode.None);
-            
             foreach (Canvas canvas in canvases) {
-                if (canvas.renderMode == RenderMode.ScreenSpaceOverlay) return canvas;
+                if (canvas.renderMode == RenderMode.ScreenSpaceOverlay) {
+                    return canvas;
+                }
             }
-            
-            // Create new canvas if none found
             GameObject canvasObj = new GameObject("DarknessCanvas");
             Canvas newCanvas = canvasObj.AddComponent<Canvas>();
             newCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            newCanvas.sortingOrder = 1000; // Render on top of everything
-            
-            // Add CanvasScaler with proper settings for WebGL
+            newCanvas.sortingOrder = 1000;
             CanvasScaler scaler = canvasObj.AddComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1920, 1080); // Match your game's resolution
+            scaler.referenceResolution = new Vector2(1280, 720);
             scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
             scaler.matchWidthOrHeight = 0.5f;
-            
             canvasObj.AddComponent<GraphicRaycaster>();
-            
             return newCanvas;
         }
     }
