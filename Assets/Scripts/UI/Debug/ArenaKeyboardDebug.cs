@@ -62,7 +62,7 @@ namespace ChronoDash.UI.Debug
             }
             
             // Only allow keyboard shortcuts when Arena is active (logged in and Arena started)
-            if (AuthManager.Instance == null || !AuthManager.Instance.IsArenaActive)
+            if (AuthManager.Instance == null)
                 return;
             
             var keyboard = Keyboard.current;
