@@ -44,13 +44,14 @@ Shader "Custom/SpotlightDarkness" {
                 v2f o;
                 o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv = v.uv;
-                o.screenPos = ComputeScreenPos(o.pos);
+                // Use UV coordinates directly for UI elements
+                o.screenPos = float4(v.uv.x * _ScreenParams.x, v.uv.y * _ScreenParams.y, 0, 1);
                 return o;
             }
             
             fixed4 frag(v2f i) : SV_Target {
-                // Get screen position in pixels
-                float2 screenPixel = i.screenPos.xy / i.screenPos.w * _ScreenParams.xy;
+                // Get screen position in pixels (WebGL compatible)
+                float2 screenPixel = float2(i.uv.x * _ScreenParams.x, i.uv.y * _ScreenParams.y);
                 
                 // Calculate distance from spotlight center
                 float dist = distance(screenPixel, _SpotlightCenter.xy);

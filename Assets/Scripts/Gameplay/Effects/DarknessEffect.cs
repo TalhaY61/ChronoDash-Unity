@@ -11,10 +11,10 @@ namespace ChronoDash.Effects {
     public class DarknessEffect : MonoBehaviour {
         [Header("Effect Settings")]
         [SerializeField] private float effectDuration = 10f;
-        [SerializeField] private float spotlightRadius = 3f; // Screen pixels
+        [SerializeField] private float spotlightRadius = 250f; // Screen pixels (increased for visibility)
         [SerializeField] private float fadeInDuration = 1.5f;
         [SerializeField] private float fadeOutDuration = 1.5f;
-        [SerializeField] private float edgeSoftness = 50f; // Gradient edge size
+        [SerializeField] private float edgeSoftness = 100f; // Gradient edge size (increased for smoother transition)
         
         // Runtime-created objects (no prefabs needed!)
         private GameObject darknessOverlay;
@@ -196,7 +196,14 @@ namespace ChronoDash.Effects {
             Canvas newCanvas = canvasObj.AddComponent<Canvas>();
             newCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
             newCanvas.sortingOrder = 1000; // Render on top of everything
-            canvasObj.AddComponent<CanvasScaler>();
+            
+            // Add CanvasScaler with proper settings for WebGL
+            CanvasScaler scaler = canvasObj.AddComponent<CanvasScaler>();
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(1920, 1080); // Match your game's resolution
+            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+            scaler.matchWidthOrHeight = 0.5f;
+            
             canvasObj.AddComponent<GraphicRaycaster>();
             
             return newCanvas;
